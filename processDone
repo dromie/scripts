@@ -1,0 +1,25 @@
+#!/ffp/bin/bash
+exec 3>/tmp/process.$$
+exec >&3
+exec 2>&3
+SHARE_DIR="/mnt/HD/HD_a2/share/"
+DEST=$SHARE_DIR/$TR_TORRENT_NAME
+RAR=unrar
+
+FILES=`transmission-remote -t $TR_TORRENT_ID -if|printAllAfter 'Name$'|awk '{print $7}'`
+RARFILES=`echo "$FILES"|grep 'part001.rar'`
+if [ -n "$RARFILES" ];then
+  echo part0001
+else  
+  RARFILES=`echo "$FILES"|grep 'rar$'`
+fi
+
+if [ -n "$RARFILES" ];then
+  mkdir $DEST
+  for a in $RARFILES;do 
+    $RAR x $TR_TORRENT_DIR/$a $DEST
+  done
+else
+  transmission-remote -t $TR_TORRENT_ID --move $SHARE_DIR
+fi
+
