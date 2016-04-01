@@ -1,0 +1,44 @@
+#!/bin/bash
+PIDFILE=/tmp/upload.pid
+
+if [ -r "$HOME/.upload" ];then
+ source $HOME/.upload
+fi
+
+echo "Environment: scandir: '$DIR' trashdir: '$TRASH' ftp server: '$FTP'"
+if [ -z "$FTP" -o -z "$DIR" -o -z "$TRASH" ];then
+  echo "Set environment!"
+  exit -1
+fi
+
+if [ -r $PIDFILE ];then
+  OLDPID=`cat $PIDFILE`
+  if kill -0 $OLDPID ;then
+    echo "Uploader is still running!" >/tmp/uploader.$$
+    exit -1
+  fi 
+fi
+
+
+
+
+exit 0
+
+remove() {
+  mv $1 "$TRASH" 
+}
+
+FILECOUNT=`findsort.py $DIR|wc -l`
+echo "Found $FILECOUNT files to upload."
+while [ $FILECOUNT -gt 4 ]; do
+  FILE=`findsort.py $DIR|head -1`
+  NEWNAME=`stat "$FILE" --printf 'kigyasz_%Y.mp4'`
+  echo "Uploading $FILE with new name $NEWNAME"
+  curl --tcp-nodelay -n -T $FILE ftp://$FTP/$NEWNAME && remove $FILE
+  if [ $? == 0 ];then
+    echo "Upload OK"
+  else
+    echo "Upload FAILED"
+  fi
+done
+
