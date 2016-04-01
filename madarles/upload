@@ -5,23 +5,22 @@ if [ -r "$HOME/.upload" ];then
  source $HOME/.upload
 fi
 
-echo "Environment: scandir: '$DIR' trashdir: '$TRASH' ftp server: '$FTP'"
-if [ -z "$FTP" -o -z "$DIR" -o -z "$TRASH" ];then
-  echo "Set environment!"
-  exit -1
-fi
-
 if [ -r $PIDFILE ];then
   OLDPID=`cat $PIDFILE`
-  if kill -0 $OLDPID ;then
-    echo "Uploader is still running!" >/tmp/uploader.$$
+  if kill -0 $OLDPID &>/dev/null;then
+    echo "Uploader is still running! ($OLDPID)" >/tmp/upload.$$
     exit -1
   fi 
 fi
 
 echo $$ >$PIDFILE
 
-exit 0
+echo "Environment: scandir: '$DIR' trashdir: '$TRASH' ftp server: '$FTP'"
+if [ -z "$FTP" -o -z "$DIR" -o -z "$TRASH" ];then
+  echo "Set environment!"
+  exit -1
+fi
+
 
 remove() {
   mv $1 "$TRASH" 
