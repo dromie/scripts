@@ -19,8 +19,7 @@ if [ -r $PIDFILE ];then
   fi 
 fi
 
-
-
+echo $$ >$PIDFILE
 
 exit 0
 
@@ -32,7 +31,7 @@ FILECOUNT=`findsort.py $DIR|wc -l`
 echo "Found $FILECOUNT files to upload."
 while [ $FILECOUNT -gt 4 ]; do
   FILE=`findsort.py $DIR|head -1`
-  NEWNAME=`stat "$FILE" --printf 'kigyasz_%Y.mp4'`
+  NEWNAME=`stat "$FILE" --printf "${PREFIX}%Y.mp4"`
   echo "Uploading $FILE with new name $NEWNAME"
   curl --tcp-nodelay -n -T $FILE ftp://$FTP/$NEWNAME && remove $FILE
   if [ $? == 0 ];then
@@ -42,3 +41,4 @@ while [ $FILECOUNT -gt 4 ]; do
   fi
 done
 
+rm $PIDFILE
