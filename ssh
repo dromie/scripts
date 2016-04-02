@@ -1,0 +1,15 @@
+#!/bin/bash
+shopt -s extglob
+ARGS=""
+for arg in $*;do
+  case $arg in 
+    -L+([0-9]))
+      r=${arg##-L}
+      ARGS="$ARGS -L$r:localhost:$r"
+      ;;
+    *)
+      ARGS="$ARGS $arg"
+      ;;
+  esac
+done
+/usr/bin/ssh $ARGS

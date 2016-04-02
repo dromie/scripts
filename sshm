@@ -1,0 +1,40 @@
+#!/bin/bash
+if [ $# -lt 2 ]; then
+  echo "Usage: $0 <mount,umount,remount> <[user@]host[:directory]>"
+  exit -1
+fi
+
+OP=$1
+CONNECT=$2
+shift 2
+REST=$*
+HOST=${CONNECT#*@}
+HOST=${HOST%:*}
+if [[ $CONNECT != *:* ]]; then
+  CONNECT=$CONNECT:
+fi
+
+_mount()
+{
+  mkdir -p ~/mnt/$HOST
+  sshfs $CONNECT ~/mnt/$HOST $REST
+}
+
+_umount()
+{
+  fusermount -u ~/mnt/$HOST
+}
+
+case $OP in 
+  mount)
+    _mount 
+    ;;
+  umount)
+    _umount
+    ;;
+  remount)
+    _umount
+    _mount
+    ;;
+esac
+
