@@ -1,0 +1,3 @@
+#!/bin/bash
+IP=`ip route show default|grep 'default via'|cut -f 3 -d' '`
+ping $IP
