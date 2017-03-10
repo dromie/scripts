@@ -1,9 +1,7 @@
-#!/bin/bash
+#!/bin/bash -e
 PIDFILE=/tmp/upload.pid
 
-if [ -r "$HOME/.upload" ];then
- source $HOME/.upload
-fi
+source $HOME/.params
 
 if [ -r $PIDFILE ];then
   OLDPID=`cat $PIDFILE`
