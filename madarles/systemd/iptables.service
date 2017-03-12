@@ -1,0 +1,10 @@
+[Unit]
+Description=IP tables script
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/home/pi/bin/iptables.sh
+
+[Install]
+WantedBy=network.target

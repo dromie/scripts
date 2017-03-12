@@ -1,0 +1,12 @@
+[Unit]
+Description=Status service
+After=multi-user.target
+
+[Service]
+Type=forking
+ExecStart=/home/pi/bin/vpn.sh
+Restart=always
+RestartSec=15s
+
+[Install]
+WantedBy=wvdial.service

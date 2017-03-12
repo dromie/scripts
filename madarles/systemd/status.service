@@ -3,7 +3,6 @@ Description=Status service
 After=multi-user.target
 
 [Service]
-Type=forking
+Type=oneshot
 ExecStart=/home/pi/bin/check_status.sh
-KillMode=process
 

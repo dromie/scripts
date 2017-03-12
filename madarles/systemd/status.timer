@@ -3,7 +3,7 @@ Description=Status timer
 
 [Timer]
 OnBootSec=2min
-OnUnitActiveSec=61min
+OnUnitActiveSec=15min
 Unit=status.service
 
 [Install]

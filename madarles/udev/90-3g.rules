@@ -1,0 +1,1 @@
+SUBSYSTEMS=="usb",  ATTRS{idProduct}=="1506", ATTRS{idVendor}=="12d1", TAG+="systemd", ENV{SYSTEMD_WANTS}="wvdial.service"

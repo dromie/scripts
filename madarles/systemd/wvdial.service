@@ -1,0 +1,12 @@
+[Unit]
+Description=Wvdial PPP
+BindsTo=dev-gsmmodem.device
+After=dev-gsmmodem.device
+
+[Service]
+Type=forking
+ExecStart=/home/pi/bin/wvdial.sh
+ExecStartPost=/home/pi/bin/duckdns
+
+[Install]
+WantedBy=dev-gsmmodem.device
