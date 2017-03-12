@@ -1,0 +1,10 @@
+[Unit]
+Description=Status timer
+
+[Timer]
+OnBootSec=2min
+OnUnitActiveSec=61min
+Unit=status.service
+
+[Install]
+WantedBy=multi-user.target

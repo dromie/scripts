@@ -1,0 +1,9 @@
+[Unit]
+Description=Status service
+After=multi-user.target
+
+[Service]
+Type=forking
+ExecStart=/home/pi/bin/check_status.sh
+KillMode=process
+

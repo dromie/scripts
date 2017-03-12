@@ -1,0 +1,10 @@
+[Unit]
+SourcePath=/etc/fstab
+Documentation=man:fstab(5) man:systemd-fstab-generator(8)
+
+[Mount]
+What=/dev/disk/by-uuid/468D199C3378C157
+Where=/mnt/ADATA
+Type=ntfs
+Options=noexec,uid=1000,gid=1000,umask=000,auto,nofail
+
