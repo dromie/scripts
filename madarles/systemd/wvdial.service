@@ -7,6 +7,7 @@ After=dev-gsmmodem.device
 Type=forking
 ExecStart=/home/pi/bin/wvdial.sh
 ExecStartPost=/home/pi/bin/duckdns
+ExecStartPost=/home/pi/bin/iptables.sh
 
 [Install]
 WantedBy=dev-gsmmodem.device

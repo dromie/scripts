@@ -1,7 +1,5 @@
 #!/bin/bash
 self_dir=`dirname "$(readlink -f $0)"`
-source ${self_dir}/utils.sh
-source ~pi/.params
 
 if [ $UID != 0 ];then
   sudo $0 "$@"
@@ -50,7 +48,7 @@ popd
 
 
 pushd systemd
-install_service /etc/systemd/system/ iptables.service mnt-ADATA.mount status.service status.timer vpn.service wvdial.service
+install_service /etc/systemd/system/ mnt-ADATA.mount status.service status.timer vpn.service wvdial.service
 install_file /etc/systemd/system/smbd.service.d/ drop.conf
 install_file /etc/systemd/system/nmbd.service.d/ drop.conf
 install_file /etc/systemd/system/lighttpd.service.d/ drop.conf

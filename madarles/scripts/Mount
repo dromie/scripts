@@ -1,0 +1,17 @@
+#!/bin/bash
+RED='\033[0;31m'
+NC='\033[0m' # No Color
+echo "Starting Samba..."
+sudo systemctl start mnt-ADATA.mount
+if [ ! -d /mnt/ADATA/camera/ ];then
+  echo -e "${RED} !!ERROR!! ${NC} HDD was not found!"
+  echo "Please reinsert HDD, and restart. Press ENTER to continue"
+  read n
+  exit -1
+fi
+sudo systemctl restart status.service
+sleep 5
+sync
+echo
+echo "Services are up and running. Press ENTER to continue."
+read n

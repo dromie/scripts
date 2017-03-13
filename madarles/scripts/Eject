@@ -1,0 +1,11 @@
+#!/bin/bash
+echo "Stopping services..."
+sudo systemctl stop mnt-ADATA.mount
+sleep 5
+sync
+sudo eject /dev/disk/by-uuid/468D199C3378C157 
+sudo hdparm -y /dev/disk/by-uuid/468D199C3378C157
+sleep 2
+echo
+echo "You can safely remove the HDD! Press ENTER to continue"
+read n
