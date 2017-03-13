@@ -4,7 +4,7 @@ source ${self_dir}/utils.sh
 source ~pi/.params
 
 function check_services() {
-  local SERVICES="smbd.service nmbd.service"
+  local SERVICES="smbd.service nmbd.service lighttpd.service"
   if systemctl is-active mnt-ADATA.mount;then
     systemctl start $SERVICES
   fi
