@@ -52,6 +52,7 @@ install_service /etc/systemd/system/ mnt-ADATA.mount status.service status.timer
 install_file /etc/systemd/system/smbd.service.d/ drop.conf
 install_file /etc/systemd/system/nmbd.service.d/ drop.conf
 install_file /etc/systemd/system/lighttpd.service.d/ drop.conf
+install_file /etc/systemd/system/ emergency.timer
 popd
 
 pushd udev

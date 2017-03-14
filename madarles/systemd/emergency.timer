@@ -1,0 +1,6 @@
+[Unit]
+Description=Emergency timer
+
+[Timer]
+OnUnitActiveSec=45s
+Unit=status.service
