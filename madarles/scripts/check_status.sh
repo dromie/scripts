@@ -31,7 +31,7 @@ if ! check_internet 5 2;then
   fi
 else 
   if [ $RETRYCOUNT -gt 0 ];then
-    MYIP=`ip -o -4 address show dev tun0|sed 's#.*inet \([^ ]*\) .*#\1#'`
+    MYIP=`ip -o -4 address show dev ppp0|sed 's#.*inet \([^ ]*\) .*#\1#'`
     slack_msg "Back online. New IP=$MYIP"
   fi
   echo 0 > $RCFILE
