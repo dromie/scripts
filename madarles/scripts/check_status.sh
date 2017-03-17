@@ -12,14 +12,13 @@ function check_services() {
   fi
 }
 
-set >/tmp/status.env
 
 check_services
+RETRYCOUNT=0
+if [ -r $RCFILE ];then
+  RETRYCOUNT=`cat $RCFILE`
+fi
 if ! check_internet 5 2;then
-  RETRYCOUNT=0
-  if [ -r $RCFILE ];then
-    RETRYCOUNT=`cat $RCFILE`
-  fi
   RETRYCOUNT=$[ $RETRYCOUNT + 1 ]
   if [ $RETRYCOUNT -gt 5 ];then
     echo "Reboot required.... Retry count reached 5"
@@ -31,9 +30,13 @@ if ! check_internet 5 2;then
     systemctl restart emergency.timer
   fi
 else 
+  if [ $RETRYCOUNT -gt 0 ];then
+    MYIP=`ip -o -4 address show dev tun0|sed 's#.*inet \([^ ]*\) .*#\1#'`
+    slack_msg "Back online. New IP=$MYIP"
+  fi
   echo 0 > $RCFILE
   echo "Internet is OK"
   systemctl stop emergency.timer
 fi
 
-
+# vim: tabstop=2 shiftwidth=2 softtabstop=2 autoindent cindent smartindent

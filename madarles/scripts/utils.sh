@@ -21,15 +21,25 @@ function reconnect() {
         ifdown ppp0
         sleep 5
         ifup ppp0
-      sleep 5
-    fi
-    if check_internet 5 5;then
-      echo "Internet is back online...."
-      return 0
-    fi
-  done
-  return 1
+        sleep 5
+      fi
+      if check_internet 5 5;then
+        echo "Internet is back online...."
+        return 0
+      fi
+    done
+    return 1
   fi
   echo "Internet still working..."
   return 0
 }
+
+
+function slack_msg() {
+  if [ -n "$SLACK_TOKEN" ];then
+    MSG="$1"
+    curl -X POST -H 'Content-type: application/json' --data '{"text":"'"$1"'"}' https://hooks.slack.com/services/$SLACK_TOKEN
+  fi
+}
+
+# vim: tabstop=2 shiftwidth=2 softtabstop=2 autoindent cindent smartindent
