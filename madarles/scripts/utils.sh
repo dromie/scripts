@@ -42,4 +42,12 @@ function slack_msg() {
   fi
 }
 
+function sql() {
+  sqlite3 $DB "$@"
+}
+
+function filecount() {
+  sql "SELECT COUNT(*) FROM files WHERE state=0"
+}
+
 # vim: tabstop=2 shiftwidth=2 softtabstop=2 autoindent cindent smartindent

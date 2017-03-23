@@ -1,19 +1,13 @@
-#!/bin/bash -e
+#!/bin/bash
 PIDFILE=/tmp/upload.pid
-
-source $HOME/.params
+self_dir=`dirname "$(readlink -f $0)"`
+source ${self_dir}/utils.sh
+source ~pi/.params
 export DB
 
-sql() {
-  sqlite3 $DB "$@"
-}
 
 remove() {
   sql "UPDATE files SET state=1 WHERE filename='$1'"
-}
-
-filecount() {
-  sql "SELECT COUNT(*) FROM files WHERE state=0"
 }
 
 if [ ! -f $DB ];then
@@ -40,18 +34,24 @@ fi
 findsort.py $DIR
 FILECOUNT=`filecount`
 echo "Found $FILECOUNT files to upload."
-
+slack_msg "Found $FILECOUNT files to upload."
+successful=0
+failed=0
 while [ `filecount` -gt 4 ]; do
   FILE=`sql "SELECT filename FROM files WHERE state=0 ORDER BY mtime LIMIT 1"`
   MTIME=`stat "$FILE" --printf "%Y"`
   NEWNAME=${PREFIX}`date --date=@$MTIME "+%Y%m%d_%H%M%S"`.mp4
   echo "Uploading $FILE with new name $NEWNAME"
-  curl --tcp-nodelay -n -T $FILE ftp://$FTP/$NEWNAME && remove $FILE
+  curl -s --tcp-nodelay -n -T $FILE ftp://$FTP/$NEWNAME && remove $FILE
   if [ $? == 0 ];then
     echo "Upload OK"
+    successful=$[ $successful +1 ]
   else
     echo "Upload FAILED"
+    failed=$[ $failed +1 ]
   fi
 done
-
+echo "Upload statistics: successful: $successful failed: $failed"
+slack_msg "Upload statistics: successful: $successful failed: $failed"
 rm $PIDFILE
+
