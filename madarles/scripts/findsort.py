@@ -1,29 +1,19 @@
-#!/usr/bin/python
-import os,sys,errno
+#!/usr/bin/python3
+import os,sys,errno,sqlite3,subprocess
 suffix="mp4"
 
-filelist = []
-for (dirpath, dirnames, filenames) in os.walk(sys.argv[1]):
-  filelist.extend(map(lambda ff:dirpath+'/'+ff,filenames))
-filelist = filter(lambda x:x.lower().endswith(suffix),filelist)
+def get_db():
+    DB=os.environ.get("DB")
+    return sqlite3.connect(DB)
 
-
-filelist = map(lambda x:(x,os.stat(x)),filelist)
-
-filelist = filter(lambda x:x[1].st_size>0,filelist)
-
-sort = sorted(filelist,key=lambda x:x[1].st_mtime)
-
-try:
-  for f in map(lambda x:x[0],sort):
-    print f
-except IOError as e:
-  if e.errno == errno.EPIPE:
-    pass
-  else:
-    raise e
-
-
-
-
+filelist=subprocess.check_output(['find',sys.argv[1],'-type','f','-size','+0','-name','*.'+suffix]).decode().split('\n')
+filelist.remove('')
+db = get_db()
+c = db.cursor()
+for file in filelist:
+  c.execute("SELECT 1 FROM files WHERE filename=:file",{'file':file})
+  if c.fetchone() is None:
+    stat=os.stat(file)
+    c.execute("INSERT INTO files (filename,state,mtime) VALUES (:file,0,:mtime)",{'file':file,'mtime':int(stat.st_mtime)})
+db.commit()
 

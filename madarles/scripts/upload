@@ -2,6 +2,23 @@
 PIDFILE=/tmp/upload.pid
 
 source $HOME/.params
+export DB
+
+sql() {
+  sqlite3 $DB "$@"
+}
+
+remove() {
+  sql "UPDATE files SET state=1 WHERE filename='$1'"
+}
+
+filecount() {
+  sql "SELECT COUNT(*) FROM files WHERE state=0"
+}
+
+if [ ! -f $DB ];then
+  sql "create table files (filename TEXT PRIMARY KEY NOT NULL, state INTEGER, mtime INTEGER)"
+fi
 
 if [ -r $PIDFILE ];then
   OLDPID=`cat $PIDFILE`
@@ -13,22 +30,21 @@ fi
 
 echo $$ >$PIDFILE
 
-echo "Environment: scandir: '$DIR' trashdir: '$TRASH' ftp server: '$FTP'"
-if [ -z "$FTP" -o -z "$DIR" -o -z "$TRASH" ];then
+echo "Environment: scandir: '$DIR' ftp server: '$FTP'"
+if [ -z "$FTP" -o -z "$DIR" ];then
   echo "Set environment!"
   exit -1
 fi
 
 
-remove() {
-  mv $1 "$TRASH" 
-}
-
-FILECOUNT=`findsort.py $DIR|wc -l`
+findsort.py $DIR
+FILECOUNT=`filecount`
 echo "Found $FILECOUNT files to upload."
-while [ $FILECOUNT -gt 4 ]; do
-  FILE=`findsort.py $DIR|head -1`
-  NEWNAME=`stat "$FILE" --printf "${PREFIX}%Y.mp4"`
+
+while [ `filecount` -gt 4 ]; do
+  FILE=`sql "SELECT filename FROM files WHERE state=0 ORDER BY mtime LIMIT 1"`
+  MTIME=`stat "$FILE" --printf "%Y"`
+  NEWNAME=${PREFIX}`date --date=@$MTIME "+%Y%m%d_%H%M%S"`.mp4
   echo "Uploading $FILE with new name $NEWNAME"
   curl --tcp-nodelay -n -T $FILE ftp://$FTP/$NEWNAME && remove $FILE
   if [ $? == 0 ];then
