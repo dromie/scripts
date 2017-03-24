@@ -1,0 +1,9 @@
+[Unit]
+Description=Upload service
+After=multi-user.target
+
+[Service]
+Type=oneshot
+User=pi
+ExecStart=/home/pi/bin/upload
+

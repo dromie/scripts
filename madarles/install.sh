@@ -48,6 +48,7 @@ popd
 
 
 pushd systemd
+install_service /etc/systemd/system/ upload.timer upload.service
 install_service /etc/systemd/system/ mnt-ADATA.mount status.service status.timer vpn.service wvdial.service
 install_file /etc/systemd/system/smbd.service.d/ drop.conf
 install_file /etc/systemd/system/nmbd.service.d/ drop.conf

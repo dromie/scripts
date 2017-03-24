@@ -55,7 +55,7 @@ if [ $# -gt 0 ];then
         shift
     done
 else
-    findsort.py $DIR
+    ${self_dir}/findsort.py $DIR
     FILECOUNT=`filecount`
     msg "Found $FILECOUNT files to upload."
     while [ `filecount` -gt 4 ]; do

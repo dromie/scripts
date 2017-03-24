@@ -50,6 +50,10 @@ function filecount() {
   sql "SELECT COUNT(*) FROM files WHERE state=0"
 }
 
+function files() {
+  sql -csv "SELECT filename,mtime FROM files WHERE state=0"|gawk -F, '{print $1, strftime("%Y%m%d_%H%M%S",$2)}'
+}
+
 function msg() {
   echo "$@"
   slack_msg "$@"

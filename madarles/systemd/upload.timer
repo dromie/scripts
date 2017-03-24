@@ -1,0 +1,10 @@
+[Unit]
+Description=Upload timer
+
+[Timer]
+OnBootSec=10min
+OnCalendar=daily
+Unit=upload.service
+
+[Install]
+WantedBy=multi-user.target
