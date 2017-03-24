@@ -50,4 +50,9 @@ function filecount() {
   sql "SELECT COUNT(*) FROM files WHERE state=0"
 }
 
+function msg() {
+  echo "$@"
+  slack_msg "$@"
+}
+
 # vim: tabstop=2 shiftwidth=2 softtabstop=2 autoindent cindent smartindent
