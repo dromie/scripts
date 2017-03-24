@@ -48,8 +48,10 @@ successful=0
 failed=0
 if [ $# -gt 0 ];then
     msg "Uploading $# files"
-    while [ -f $1 ];do
-        upload_file $1
+    while [ $# -gt 0 ];do
+        if [ -f $1 ];then 
+            upload_file $1
+        fi
         shift
     done
 else
