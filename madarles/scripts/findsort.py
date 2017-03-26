@@ -11,9 +11,14 @@ filelist.remove('')
 db = get_db()
 c = db.cursor()
 for file in filelist:
-  c.execute("SELECT 1 FROM files WHERE filename=:file",{'file':file})
-  if c.fetchone() is None:
     stat=os.stat(file)
-    c.execute("INSERT INTO files (filename,state,mtime) VALUES (:file,0,:mtime)",{'file':file,'mtime':int(stat.st_mtime)})
-db.commit()
+    file_record = {'file':file,'mtime': int(stat.st_mtime)}
+    c.execute("SELECT mtime FROM files WHERE filename=:file",{'file':file})
+    row = c.fetchone()
+    if row is None:
+        c.execute("INSERT INTO files (filename,state,mtime) VALUES (:file,0,:mtime)",file_record)
+    else:
+        if row[0] < file_record['mtime']:
+            c.execute("UPDATE files SET state=0,mtime=:mtime WHERE filename=:file",file_record)
+    db.commit()
 
