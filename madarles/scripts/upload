@@ -32,12 +32,14 @@ fi
 upload_file() {
     FILE=$1
     MTIME=`stat "$FILE" --printf "%Y"`
+    SIZE=`stat "$FILE" --printf "%s"`
     NEWNAME=${PREFIX}`date --date=@$MTIME "+%Y%m%d_%H%M%S"`.mp4
     echo "Uploading $FILE with new name $NEWNAME"
     curl -s --tcp-nodelay -n -T $FILE ftp://$FTP/$NEWNAME && remove $FILE
     if [ $? == 0 ];then
         echo "Upload OK"
         successful=$[ $successful +1 ]
+        bytes=$[ $bytes + $SIZE ]
     else
         echo "Upload FAILED"
         failed=$[ $failed +1 ]
@@ -46,6 +48,8 @@ upload_file() {
 
 successful=0
 failed=0
+bytes=0
+stime=`date "+%s"`
 if [ $# -gt 0 ];then
     msg "Uploading $# files"
     while [ $# -gt 0 ];do
@@ -65,7 +69,14 @@ else
       upload_file $FILE
     done
 fi
-
-msg "Upload statistics: successful attempts: $successful failed attempts: $failed"
+etime=`date "+%s"`
+duration=$[ $etime - $stime ]
+duration_str=`date -u -d @${duration} +"%T"`
+if [ $duration -eq 0 ];then
+    avg_speed="N/A"
+else
+    avg_speed=$[ $bytes / $duration / 1000 ]
+fi
+msg "Upload statistics: successful attempts: $successful failed attempts: $failed uploaded: $bytes bytes in $duration_str avg speed: $avg_speed Kb/sec"
 rm $PIDFILE
 

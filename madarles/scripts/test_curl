@@ -1,0 +1,10 @@
+#!/bin/bash
+FILE=/tmp/curl.out
+if [ "$1" == "reset" ];then
+    rm -f $FILE
+elif [ "$1" == "dump" ];then
+    cat $FILE
+else
+    echo "$@" >>$FILE
+    sleep 1
+fi

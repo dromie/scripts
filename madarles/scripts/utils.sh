@@ -50,8 +50,12 @@ function filecount() {
   sql "SELECT COUNT(*) FROM files WHERE state=0"
 }
 
+function all_files() {
+  sql -csv "SELECT filename,mtime FROM files $1"|gawk -F, '{print $1, strftime("%Y%m%d_%H%M%S",$2)}'
+}
+
 function files() {
-  sql -csv "SELECT filename,mtime FROM files WHERE state=0"|gawk -F, '{print $1, strftime("%Y%m%d_%H%M%S",$2)}'
+  all_files "WHERE state=0"
 }
 
 function msg() {
