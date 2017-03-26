@@ -38,5 +38,11 @@ else
   echo "Internet is OK"
   systemctl stop emergency.timer
 fi
+DNSIP=`dig +short $HOST.duckdns.org`
+MYIP=`ip -o -4 address show dev ppp0|sed 's#.*inet \([^ ]*\) .*#\1#'`
+if [ "$DNSIP" != "$MYIP" ];then
+  ${self_dir}/duckdns
+  slack_msg "Back online. New IP=$MYIP"
+fi
 
 # vim: tabstop=2 shiftwidth=2 softtabstop=2 autoindent cindent smartindent
