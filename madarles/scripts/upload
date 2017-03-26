@@ -55,15 +55,17 @@ if [ $# -gt 0 ];then
         shift
     done
 else
+    BEFORE=`filecount`
     ${self_dir}/findsort.py $DIR
+    findsort.py $DIR
     FILECOUNT=`filecount`
-    msg "Found $FILECOUNT files to upload."
+    msg "Found $[ $FILECOUNT - $BEFORE ] new files to upload."
     while [ `filecount` -gt 4 ]; do
       FILE=`sql "SELECT filename FROM files WHERE state=0 ORDER BY mtime LIMIT 1"`
       upload_file $FILE
     done
 fi
 
-msg "Upload statistics: successful: $successful failed: $failed"
+msg "Upload statistics: successful attempts: $successful failed attempts: $failed"
 rm $PIDFILE
 
