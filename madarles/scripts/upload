@@ -46,6 +46,10 @@ upload_file() {
     fi
 }
 
+hbytes() {
+    echo $1|numfmt --to=si --suffix=b
+}
+
 successful=0
 failed=0
 bytes=0
@@ -75,8 +79,9 @@ duration_str=`date -u -d @${duration} +"%T"`
 if [ $duration -eq 0 ];then
     avg_speed="N/A"
 else
-    avg_speed=$[ $bytes / $duration / 1000 ]
+    avg_speed="`hbytes $[ $bytes / $duration ]`/sec"
 fi
-msg "Upload statistics: successful attempts: $successful failed attempts: $failed uploaded: $bytes bytes in $duration_str avg speed: $avg_speed Kb/sec"
+bytes=`hbytes $bytes`
+msg "Upload statistics: successful attempts: $successful failed attempts: $failed uploaded: ${bytes} in $duration_str avg speed: ${avg_speed}"
 rm $PIDFILE
 
