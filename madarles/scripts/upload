@@ -65,7 +65,6 @@ if [ $# -gt 0 ];then
 else
     BEFORE=`filecount`
     ${self_dir}/findsort.py $DIR
-    findsort.py $DIR
     FILECOUNT=`filecount`
     msg "Found $[ $FILECOUNT - $BEFORE ] new files to upload."
     while [ `filecount` -gt 4 ]; do
