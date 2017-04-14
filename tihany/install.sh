@@ -43,7 +43,7 @@ popd
 
 pushd systemd
 install_service /etc/systemd/system/ vpn.service
-install_service /etc/systemd/system/ stream.service
+install_service /etc/systemd/system/ streams.service
 popd
 
 systemctl daemon-reload

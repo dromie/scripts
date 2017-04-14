@@ -3,8 +3,7 @@ Description=Stream service
 After=multi-user.target
 
 [Service]
-Type=forking
-ExecStart=/home/pi/bin/stream.sh
+ExecStart=/home/pi/bin/streams.sh
 Restart=always
 RestartSec=15s
 
