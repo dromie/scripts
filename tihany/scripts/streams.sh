@@ -27,7 +27,15 @@ python3 $self_dir/streams.py &
 echo $! >$PYPIDFILE
 
 while [ 0 ];do
-    sql "SELECT url from streams ORDER BY id"|xargs $LIVEBIN &>$LIVEOUT &
-    echo $! >$LIVEPIDFILE
-    wait `cat $LIVEPIDFILE`
+    killall $LIVEBIN
+    if [ `sql "SELECT url from streams ORDER BY id"|wc -l` -gt 0 ];then
+        sql "SELECT url from streams ORDER BY id"|xargs $LIVEBIN &>$LIVEOUT &
+        sleep 5
+        pidof $LIVEBIN >$LIVEPIDFILE
+    else
+        echo "No streams defined." >$LIVEOUT
+        sleep 3600 &
+        echo $! >$LIVEPIDFILE
+    fi
+    wait_for_pid `cat $LIVEPIDFILE`
 done

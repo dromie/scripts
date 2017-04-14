@@ -16,4 +16,11 @@ function msg() {
   slack_msg "$@"
 }
 
+function wait_for_pid() {
+  while kill -0 "$@";do
+    sleep 5
+  done
+}
+
+
 # vim: tabstop=2 shiftwidth=2 softtabstop=2 autoindent cindent smartindent
