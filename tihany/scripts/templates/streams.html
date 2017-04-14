@@ -1,0 +1,42 @@
+<!doctype html>
+<title>Hello from Flask</title>
+<table>
+<tr><td>real url</td><td>proxy url</td><td>actions</td></tr>
+{% for stream in streams %}
+<tr>
+<td>{{ stream['url'] }}</td>
+<td>{{ stream['proxy_url'] }}</td>
+<td>
+<form action="/action" method=post>
+<input type=hidden name='id' value="{{ stream['id'] }}">
+{% if stream['prev'] %}
+<input type=hidden name='prev' value="{{ stream['prev'] }}">
+<button type=submit name='action' value='up'><img src='/static/up.png' width=15 height=15></button>
+{% endif %}
+</td><td>
+{% if stream['next'] %}
+<input type=hidden name='next' value="{{ stream['next'] }}">
+<button type=submit name='action' value='down'><img src='/static/down.png' width=15 height=15></button>
+{% endif %}
+</td>
+<td>
+<button type=submit name='action' value='delete'><img src='/static/delete.png' width=15 height=15></button>
+</td>
+</form>
+</tr>
+{% endfor %}
+</table>
+<BR><BR>
+<form action='/add' method=post>
+<input type=hidden name='id' value='{{ nextid }}'>
+<input type=text name='url'>
+<input type=submit value='Add Url'>
+</form>
+<BR><BR>
+<form action='/restart' method=post>
+<input type=submit value='restart'></form>
+
+
+
+
+

@@ -1,0 +1,3 @@
+DB=/tmp/test_db.db
+RTSP_PORT=8554
+SELF_IP=kutyafule
