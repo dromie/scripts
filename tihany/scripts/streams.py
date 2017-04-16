@@ -11,6 +11,10 @@ def get_db():
 
 app = Flask(__name__, static_url_path='/static')
 
+def read_file(path):
+    with open(path, 'r') as content_file:
+        return content_file.read()
+
 def get_ids():
     db = get_db()
     c = db.cursor()
@@ -65,16 +69,17 @@ def delete_stream(id):
 @app.route('/restart', methods=['POST'])
 def restart():
     pidfile = os.environ.get("LIVEPIDFILE")
-    s = open(pidfile, 'r').read()
+    s = read_file(pidfile)
     pid = int(s)
     print("kill %d"%(pid))
-    os.kill(pid, signal.SIGINT)
+    os.kill(pid, signal.SIGTERM)
     return redirect('/')
 
 @app.route('/')
 @app.route('/streams/')
 @app.route('/streams')
 def start_page():
+    log_content = read_file(os.environ.get("LIVEOUT"))
     nextid = sorted(set(range(1, 10)) - set(get_ids()))[0]
     streams = []
     proxy_id = 1
@@ -89,7 +94,7 @@ def start_page():
         proxy_id = proxy_id + 1
         streams.append(stream)
         prev = stream
-    return render_template('streams.html', streams=streams, nextid=nextid)
+    return render_template('streams.html', streams=streams, nextid=nextid, log_content=log_content)
     
 
 

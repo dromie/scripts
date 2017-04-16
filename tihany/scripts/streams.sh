@@ -1,12 +1,13 @@
 #!/bin/bash
 
 LIVEPIDFILE=/tmp/live555.pid
+LIVEOUT=/tmp/live.out
 PYPIDFILE=/tmp/streams.pid
 self_dir=`dirname "$(readlink -f $0)"`
 source ${self_dir}/utils.sh
-#source ~pi/.params
-source test_params
-export DB SELF_IP RTSP_PORT LIVEPIDFILE
+source ~pi/.params
+#source test_params
+export DB SELF_IP RTSP_PORT LIVEPIDFILE LIVEOUT
 
 stopall() {
     kill `cat $PYPIDFILE`
@@ -25,8 +26,8 @@ python3 $self_dir/streams.py &
 echo $! >$PYPIDFILE
 
 while [ 0 ];do
-    sql "SELECT url from streams ORDER BY id"|xargs echo
-    sleep 10 &
+    (date;sql "SELECT url from streams ORDER BY id"|xargs echo) &>$LIVEOUT
+    sleep 10000 &
     echo $! >$LIVEPIDFILE
     wait `cat $LIVEPIDFILE`
 done
