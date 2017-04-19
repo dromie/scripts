@@ -36,11 +36,14 @@ install_service() {
 }
 
 pushd scripts
-install_file $INSTALL_DIR utils.sh vpn.sh
+install_file $INSTALL_DIR utils.sh vpn.sh streams.py streams.sh 
+install_file $INSTALL_DIR/static static/delete.png static/up.png static/down.png
+install_file $INSTALL_DIR/templates templates/streams.html
 popd
 
 pushd systemd
 install_service /etc/systemd/system/ vpn.service
+install_service /etc/systemd/system/ stream.service
 popd
 
 systemctl daemon-reload

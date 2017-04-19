@@ -1,0 +1,12 @@
+[Unit]
+Description=Stream service
+After=multi-user.target
+
+[Service]
+Type=forking
+ExecStart=/home/pi/bin/stream.sh
+Restart=always
+RestartSec=15s
+
+[Install]
+WantedBy=multi-user.target
