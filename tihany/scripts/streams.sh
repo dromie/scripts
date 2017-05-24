@@ -32,7 +32,7 @@ while [ 0 ];do
     if [ `sql "SELECT url from streams ORDER BY id"|wc -l` -gt 0 ];then
         echo -n "$LIVEBIN" >$LIVEOUT
         sql "SELECT url from streams ORDER BY id"|xargs  >>$LIVEOUT
-        sql "SELECT url from streams ORDER BY id"|xargs $LIVEBIN &>>$LIVEOUT &
+        sql "SELECT url from streams ORDER BY id"|xargs $LIVEBIN -b 1000000 &>>$LIVEOUT &
         sleep 5
         pidof `basename $LIVEBIN` >$LIVEPIDFILE
     else
