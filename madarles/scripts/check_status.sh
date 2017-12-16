@@ -3,7 +3,7 @@ self_dir=`dirname "$(readlink -f $0)"`
 source ${self_dir}/utils.sh
 source ~pi/.params
 RCFILE=/var/run/wvdial_retries
-
+REBOOT_LIMIT=100
 
 function check_services() {
   local SERVICES="smbd.service nmbd.service lighttpd.service"
@@ -20,8 +20,8 @@ if [ -r $RCFILE ];then
 fi
 if ! check_internet 5 2;then
   RETRYCOUNT=$[ $RETRYCOUNT + 1 ]
-  if [ $RETRYCOUNT -gt 5 ];then
-    echo "Reboot required.... Retry count reached 5"
+  if [ $RETRYCOUNT -gt $REBOOT_LIMIT ];then
+    echo "Reboot required.... Retry count reached $REBOOT_LIMIT"
     reboot
   else
     echo $RETRYCOUNT > $RCFILE

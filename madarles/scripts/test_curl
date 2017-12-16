@@ -1,10 +1,27 @@
 #!/bin/bash
 FILE=/tmp/curl.out
+FAIL=$FILE.fail
 if [ "$1" == "reset" ];then
-    rm -f $FILE
+    rm -f $FILE $FAIL
 elif [ "$1" == "dump" ];then
     cat $FILE
+elif [ "$1" == "fail" ];then
+    count=-1
+    if [ "$2" != "" ];then 
+      count=$2
+    fi
+    echo $count >$FAIL
 else
+    if [ -f $FAIL ];then
+      C=`cat $FAIL`
+      if [ $C -eq 0 ];then
+        rm $FAIL
+      else
+        C=$[ $C -1 ]
+        $0 fail $C
+        exit -1
+      fi
+    fi
     echo "$@" >>$FILE
     sleep 1
 fi
