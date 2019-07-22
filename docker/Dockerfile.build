@@ -1,0 +1,7 @@
+#target: build-essential
+
+FROM ubuntu:18.04
+RUN apt-get update && apt-get -y install build-essential sudo vim git python3
+RUN adduser --uid 1000 user && \
+      echo "user ALL=(ALL) NOPASSWD:ALL" >>/etc/sudoers && \
+      echo 'Defaults env_keep += "http_proxy https_proxy ftp_proxy"' >>/etc/sudoers
