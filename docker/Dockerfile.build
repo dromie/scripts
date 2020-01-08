@@ -1,7 +1,8 @@
 #target: build-essential
 
-FROM ubuntu:18.04
-RUN apt-get update && apt-get -y install build-essential sudo vim git python3
-RUN adduser --uid 1000 user && \
-      echo "user ALL=(ALL) NOPASSWD:ALL" >>/etc/sudoers && \
-      echo 'Defaults env_keep += "http_proxy https_proxy ftp_proxy"' >>/etc/sudoers
+FROM ubuntu:19.04
+RUN apt-get update && apt-get -y install build-essential sudo vim git python3 wget curl apt-file && apt-file update
+RUN addgroup admin
+RUN sed -i 's/%admin ALL=(ALL) ALL/%admin ALL=(ALL) NOPASSWD:ALL/g' /etc/sudoers
+RUN echo 'Defaults env_keep += "http_proxy https_proxy ftp_proxy"' >>/etc/sudoers
+RUN for i in `seq 0 5`;do adduser --disabled-password --uid 100$i --ingroup admin --no-create-home user$i;done
