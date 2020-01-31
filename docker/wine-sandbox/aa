@@ -1,0 +1,6 @@
+#target: lutris
+
+FROM build-essential
+RUN dpkg --add-architecture i386 && apt-get update && apt-get install -y software-properties-common
+RUN add-apt-repository ppa:lutris-team/lutris && apt-get update
+RUN apt-get install -y lutris
