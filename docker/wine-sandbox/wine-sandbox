@@ -7,7 +7,7 @@ docker run -it --rm \
   --workdir /home/user0 \
   --user $UID \
   -v "$DIR":/home/user0/ \
-  -v /run/user/1000/pulse/native:/tmp/pulseaudio.socket \
+  -v /run/user/$UID/pulse/native:/tmp/pulseaudio.socket \
   -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix \
   --device /dev/dri \
   --device /dev/snd \

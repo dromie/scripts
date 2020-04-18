@@ -1,7 +1,7 @@
 #target: build-essential
 
 FROM ubuntu:18.04
-RUN apt-get update && apt-get -y install build-essential sudo vim iproute2 git python3 wget curl apt-file && apt-file update
+RUN apt-get update && apt-get -y install build-essential sudo vim iproute2 git python3 wget curl apt-file inetutils-ping dnsutils && apt-file update
 RUN addgroup admin
 RUN sed -i 's/%admin ALL=(ALL) ALL/%admin ALL=(ALL) NOPASSWD:ALL/g' /etc/sudoers
 RUN echo 'Defaults env_keep += "http_proxy https_proxy ftp_proxy"' >>/etc/sudoers
