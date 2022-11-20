@@ -1,0 +1,18 @@
+#!/bin/ash
+signal()
+{
+echo "SIGNAL"
+}
+
+read -t 5 host
+if [ -n "$host" ];then
+	/bin/getconsole $host
+	exit
+fi
+
+echo "Thanks for connecting"
+/bin/checkconsoles
+trap signal INT
+trap signal TERM
+sleep 36000
+kill -9 $$

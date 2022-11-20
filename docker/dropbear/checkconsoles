@@ -1,0 +1,17 @@
+#!/bin/ash
+if [ $# -eq 0 ] || [ $# -gt 0 ] && [ "$1" == "-v" ];then
+  echo -e "VPNs:"
+fi
+CONSOLE=/home/sleeper/console
+A=1
+for port in `cat $CONSOLE|cut -f 1 -d'_'`;do
+  if netstat -tln 2>/dev/null|grep "127.0.0.1:$port" >/dev/null 2>/dev/null;then
+    echo -e since: `grep "^$port" $CONSOLE|cut -f 2 -d'_'` "port: $port" `grep "^$port" $CONSOLE|cut -f 3 -d'_'`
+    A=0
+  fi
+done
+if [ $# -gt 0 ] && [ "$1" == "-v" ];then
+  lsof|head -1
+  lsof -n|grep dropbe|egrep "LISTEN|ESTABLISHED"
+fi
+exit $A

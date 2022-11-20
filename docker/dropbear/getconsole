@@ -1,0 +1,17 @@
+#!/bin/ash
+FILE=/home/sleeper/console
+DATE=`date`
+if [ $# -gt 0 ];then 
+	PORT=`grep "_$1\$" $FILE 2>/dev/null|cut -f 1 -d'_'|head -1`
+	if [ -z "$PORT" ];then
+		PORT=4000
+		while grep "^${PORT}_" $FILE 2>/dev/null >/dev/null ;do
+			PORT=$(( $PORT + 1 ))
+		done
+		echo "${PORT}_${DATE}_$1" >>$FILE
+	fi
+	sed -i "s/^$PORT.*$1\$/${PORT}_${DATE}_$1/" $FILE 2>/dev/null >/dev/null
+	chown sleeper:sleeper $FILE
+	echo $PORT
+fi
+
