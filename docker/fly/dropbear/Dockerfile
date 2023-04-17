@@ -1,7 +1,7 @@
 #target: dropbear
 FROM alpine:3.14
 RUN adduser -D sleeper
-RUN apk add --no-cache dropbear wireguard-tools-wg-quick wireguard-tools
+RUN apk add --no-cache dropbear wireguard-tools-wg-quick wireguard-tools dnsmasq
 COPY dropbear_*_host_key /etc/dropbear/
 COPY getconsole /bin/
 COPY checkconsoles /bin/
