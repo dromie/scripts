@@ -1,0 +1,18 @@
+#!/bin/bash
+PROXY=
+if [ -n $http_proxy ];then
+  PROXY="-e http_proxy=$http_proxy -e https_proxy=$https_proxy -e no_proxy=$no_proxy,192.168.166.188,192.168.166.1"
+fi
+docker run -it --rm \
+  -v "$HOME/.zepp":/home/node/.zepp \
+  -v $PWD:/app \
+  --workdir /app \
+  --user $UID \
+  -v /run/user/$UID/pulse/native:/tmp/pulseaudio.socket \
+  -e XDG_RUNTIME_DIR=$XDG_RUNTIME_DIR \
+  -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix \
+  --net=host \
+  $PROXY \
+  --device /dev/dri \
+  --device /dev/snd \
+zeus-cli "$@"
