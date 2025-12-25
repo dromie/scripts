@@ -1,0 +1,14 @@
+#!/bin/sh
+. /lib/functions.sh
+TMPFILE=$(mktemp)
+handle_interface() {
+    local config="$1"
+    local custom="$2"
+    config_get pkey $config public_key
+    config_get description $config description
+    echo "s#$pkey#$description#" >>$TMPFILE
+}
+config_load network
+config_foreach handle_interface wireguard_hometunnel
+wg show |sed -f $TMPFILE
+rm $TMPFILE
